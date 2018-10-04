@@ -16,7 +16,8 @@ namespace sets
             Showroom.Add("Fusion");
             Showroom.Add("Wrangler");
             /* 
-             added "Model 3" again to show that HashSets have UNIQUE items, so Model 3 will only appear once in the console
+             added "Model 3" again to show that HashSets have UNIQUE items 
+             so Model 3 will only appear once in the console
             */
             Showroom.Add("Model 3");
 
