@@ -12,7 +12,8 @@ public class Employee {
         }
     }
     public string Title { get; set; }
-    public DateTime StartDate { get; }
+    public DateTime StartDate { get; set; }
+    public int CompanyId { get; set; }
     
     public void ListEmployees(Employee employee)
     {
@@ -21,13 +22,21 @@ public class Employee {
 }
 public class Company
 {
+        public Company(string Name, DateTime CreatedOn, int Id)
+    {
+        this.Name = Name;
+        this.CreatedOn = CreatedOn;
+        this.Id = Id;
+    }
 
     // Some readonly properties (let's talk about gets, baby)
     public string Name { get; }
     public DateTime CreatedOn { get; }
 
+    public int Id { get; }
+
     // Create a public property for holding a list of current employees
-    public static List<Employee> EmployeeList = new List<Employee>();
+    public List<Employee> EmployeeList = new List<Employee>();
     
     
     /*
@@ -38,11 +47,7 @@ public class Company
         The constructor will set the value of the public properties
     */
     //
-    public Company(string Name)
-    {
-        this.Name = Name;
-        // this.CreatedOn = CreatedOn;
-    }
+
 }
 
 class Program
@@ -50,7 +55,11 @@ class Program
     static void Main(string[] args)
     {
         // Create an instance of a company. Name it whatever you like.
-        Company GoodCompany = new Company("The Best Place to Work");
+        /*
+            This is using the Company Constructor to create a new Company with the properties: Name, CreatedOn
+        */
+        Company GoodCompany = new Company("The Best Place to Work", DateTime.Now, 1);
+        Company BadCompany = new Company("The WORST Place to Work", DateTime.Now, 2);
 
         // Create three employees
         Employee Jason = new Employee();
@@ -58,45 +67,53 @@ class Program
             Jason.FirstName = "Jason";
             Jason.LastName = "MelBourne";
             Jason.Title = "Big Guy";
-            // Jason.StartDate = new DateTime();
+            Jason.StartDate = new DateTime(2018, 5, 23);
+            Jason.CompanyId = GoodCompany.Id;
         }
         Employee Maci = new Employee();
         {
             Maci.FirstName = "Maci";
             Maci.LastName = "Jack";
             Maci.Title = "CEO";
-            // Maci.StartDate = new DateTime();
+            Maci.StartDate = DateTime.Now;
+            Maci.CompanyId = GoodCompany.Id;
+
         }
         Employee Kyle = new Employee();
         {
             Kyle.FirstName = "Kyle";
             Kyle.LastName = "Anstess";
             Kyle.Title = "CFO";
-            // Kyle.StartDate = new DateTime();
+            Kyle.StartDate = new DateTime(2018, 2, 13);
+            Kyle.CompanyId = BadCompany.Id;
         }
         Employee Hannah = new Employee();
         {
             Hannah.FirstName = "Hannah";
             Hannah.LastName = "Morrish";
             Hannah.Title = "Sales Person";
-            // Hannah.StartDate = new DateTime();
+            Hannah.StartDate = new DateTime();
+            Hannah.CompanyId = BadCompany.Id;
         }
 
         // Assign the employees to the company
-        Company.EmployeeList.Add(Jason);
-        Company.EmployeeList.Add(Maci);
-        Company.EmployeeList.Add(Kyle);
-        Company.EmployeeList.Add(Hannah);
+        GoodCompany.EmployeeList.Add(Jason);
+        GoodCompany.EmployeeList.Add(Maci);
+        BadCompany.EmployeeList.Add(Kyle);
+        BadCompany.EmployeeList.Add(Hannah);
 
 
         /*
             Iterate the company's employee list and generate the
             simple report shown above
         */
-        Console.WriteLine(GoodCompany);
-        foreach(Employee employee in Company.EmployeeList)
+        foreach(Employee employee in GoodCompany.EmployeeList)
         {
-            Console.WriteLine($"{employee.FullName}");
+            Console.WriteLine($"{employee.FullName} started on {employee.StartDate}, at {GoodCompany.Name}");
+        }
+        foreach(Employee employee in BadCompany.EmployeeList)
+        {
+            Console.WriteLine($"{employee.FullName} started on {employee.StartDate}, at {BadCompany.Name}");
         }
     }
 }
