@@ -5,12 +5,14 @@ namespace StudentExercises
 {
     class Cohort
     {
+        // constructor to create new cohorts
         public Cohort (string Name)
         {
             this.Name = Name;
         }
-        public string Name { get; }
 
+        // the properties of the cohort
+        public string Name { get; }
         public List<Instructor> InstructorList = new List<Instructor>();
         public List<Student> StudentList = new List<Student>();
     }

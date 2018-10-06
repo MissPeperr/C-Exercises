@@ -7,15 +7,6 @@ namespace StudentExercises
     {
         static void Main(string[] args)
         {
-            List<Student> StudentList = new List<Student>();
-            List<Exercise> AllExercises = new List<Exercise>();
-            /*
-                Create 4, or more, exercises.
-                Create 3, or more, cohorts.
-                Create 4, or more, students and assign them to one of the cohorts.
-                Create 3, or more, instructors and assign them to one of the cohorts.
-                Have each instructor assign 2 exercises to each of the students.
-            */
 
             // created 4 exercises
             Exercise Classes = new Exercise("Classes", "C#");
@@ -39,40 +30,44 @@ namespace StudentExercises
             Instructor Meg = new Instructor("Meg", "Ducharme", "megducharme", TwentySeven.Name);
             Instructor Jenna = new Instructor("Jenna", "Solis", "JennaSolis", TwentyEight.Name);
 
-            // assign exercises to students
+            // assign 2 exercises to 3 students
             Steve.Assign(Madi, Classes);
             Steve.Assign(Madi, HashSets);
             Meg.Assign(Jonathan, Classes);
             Meg.Assign(Jonathan, HashSets);
             Jenna.Assign(Elyse, Classes);
             Jenna.Assign(Elyse, Lists);
-            Steve.Assign(Madi, Dictionaries);
             
+            List<Student> StudentList = new List<Student>();
             // added students to the student list that was created
             StudentList.Add(Madi);
             StudentList.Add(Jonathan);
             StudentList.Add(Cashew);
             StudentList.Add(Elyse);
 
+            List<Exercise> AllExercises = new List<Exercise>();
             // added exercises to the exercise list that was created
             AllExercises.Add(Classes);
             AllExercises.Add(Lists);
             AllExercises.Add(Dictionaries);
             AllExercises.Add(HashSets);
 
-            Console.WriteLine($"Testing ExerciseList in Student: {Madi.ExerciseList}");
-            Console.WriteLine($"Testing Exercises: {AllExercises.Dictionaries.Name}");
+            // loop through the list of students
+            foreach(Student student in StudentList)
+            {
+                // loop through the list of exercises
+                foreach(Exercise exercise in AllExercises)
+                {
+                    /*
+                        If the student's exercise list contains the current exercise, then print the student's first name and the exercise they're working on
+                    */
+                    if(student.ExerciseList.Contains(exercise))
+                    {
+                        Console.WriteLine($"{student.FirstName} is currently working on {exercise.Name}");
+                    }
 
-            // foreach(Student student in StudentList)
-            // {
-            //     foreach(Exercise exercise in AllExercises)
-            //     {
-            //         if(student.ExerciseList ==)
-            //         {
-            //         Console.WriteLine($"{student.FirstName} is currently working on {exercise}");
-            //         }
-            //     }
-            // }
+                }
+            }
         }
     }
 }
