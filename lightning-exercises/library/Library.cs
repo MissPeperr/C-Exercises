@@ -37,6 +37,18 @@ namespace Library
 
         }
 
+        public void CheckIn(string isbn, CardHolder cardHolder)
+        {
+            foreach (Book book in _bookList)
+            {
+                if(book.ISBN == isbn && !book.IsAvailable)
+                {
+                    cardHolder.CheckInBook(book);
+                    book.IsAvailable = true;
+                }
+            }
+        }
+
         public bool IsAvailable(string isbn)
         {
             foreach (Book book in _bookList)
