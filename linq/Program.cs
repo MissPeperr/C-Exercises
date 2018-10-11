@@ -10,10 +10,8 @@ namespace linq {
             List<string> fruits = new List<string> () { "Lemon", "Apple", "Orange", "Lime", "Watermelon", "Loganberry" };
 
             Console.WriteLine ("///// Fruits that start with L /////");
-            var LFruits = fruits.Where (fruit => fruit.Contains ("L"));
-            List<string> AllLFruits = new List<string> ();
+            var LFruits = fruits.Where(fruit => fruit.Contains ("L")).ToList();
             foreach (var fruit in LFruits) {
-                AllLFruits.Add (fruit);
                 Console.WriteLine (fruit);
             }
 
@@ -70,7 +68,10 @@ namespace linq {
             };
 
             Console.WriteLine ("///// Students in Descending Alphebetical Order /////");
-            List<string> descend = (from name in names orderby name descending select name).ToList ();
+            List<string> descend = (
+                from name in names 
+                orderby name descending 
+                select name).ToList ();
             descend.ForEach (name => Console.WriteLine ($@"{name}"));
 
             Console.WriteLine ("///// How many Numbers? Aggregate Operations /////");
@@ -102,13 +103,13 @@ namespace linq {
             List<int> wheresSquaredo = new List<int> () {
                 66, 12, 8, 27, 82, 34, 7, 50, 19, 46, 81, 23, 30, 4, 68, 14
             };
-            foreach (int num in wheresSquaredo)
+            wheresSquaredo.ForEach(num => 
             {
                 if(Math.Sqrt(num) % 1 == 0)
                 {
                     Console.WriteLine(Math.Sqrt(num));
                 }
-            }
+            });
 
             /*
                 Given the same customer set, display how many millionaires per bank.
@@ -120,7 +121,7 @@ namespace linq {
                     FTB 1
                     CITI 1
             */
-
+            Console.WriteLine("///// How many millionaires per bank? /////");
             List<Customer> customers = new List<Customer>() {
                 new Customer(){ Name="Bob Lesman", Balance=80345.66, Bank="FTB"},
                 new Customer(){ Name="Joe Landy", Balance=9284756.21, Bank="WF"},
@@ -134,6 +135,61 @@ namespace linq {
                 new Customer(){ Name="Sid Brown", Balance=49582.68, Bank="CITI"}
             };
 
+            /*
+                where the customer.Balance is greater than 999999.99
+                group the customer by the customer.Bank into a new list called 'g'
+                select or return a new object with the key of Bank and a value of Person
+                    Bank contains the Key of 'g', 
+                    Person contains the entire 'g' and puts it into a List
+            
+            */
+            var bankGroup = from customer in customers
+                where customer.Balance > 999999.99
+                group customer by customer.Bank into g
+                select new {Bank = g.Key, Person = g.ToList()};
+            /*
+                for each customer in 'bankGroup',
+                WriteLine customer.Bank (key) and the length of customer.Person.Count (value)
+            */
+            foreach(var customer in bankGroup)
+            {
+                Console.WriteLine($"{customer.Bank}: {customer.Person.Count()}");
+            }
+
+            /*
+                TASK:
+                    As in the previous exercise, you're going to output the millionaires,
+                    but you will also display the full name of the bank. You also need
+                    to sort the millionaires' names, ascending by their LAST name.
+
+                Example output:
+                    Tina Fey at Citibank
+                    Joe Landy at Wells Fargo
+                    Sarah Ng at First Tennessee
+                    Les Paul at Wells Fargo
+                    Peg Vale at Bank of America
+            */
+
+
+            // Create some banks and store in a List
+            List<Bank> banks = new List<Bank>() {
+                new Bank(){ Name="First Tennessee", Symbol="FTB"},
+                new Bank(){ Name="Wells Fargo", Symbol="WF"},
+                new Bank(){ Name="Bank of America", Symbol="BOA"},
+                new Bank(){ Name="Citibank", Symbol="CITI"},
+            };
+
+            var millionaireReport = (from customer in customers
+                join bank in banks on customer.Bank equals bank.Symbol into bc
+                from bank in bc
+                select new {BankName = bank.Name, CustomerName = customer.Name}).ToList();
+            
+            
+
+            foreach (var reportInfo in millionaireReport)
+            {
+                Console.WriteLine($"{reportInfo.CustomerName} at {reportInfo.BankName}");
+            }
         }
     }
 }

@@ -33,7 +33,6 @@ namespace exceptions {
         public Contact GetByEmail (string email) {
             // loop over the contacts in ContactList
             foreach (var contact in ContactList.Values) {
-
                 /*
                     if the ContactList contains the value of the current contact
                         => if the current contact.Email == the email
