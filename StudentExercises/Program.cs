@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StudentExercises
 {
@@ -13,6 +14,8 @@ namespace StudentExercises
             Exercise Lists = new Exercise("Lists", "Python");
             Exercise Dictionaries = new Exercise("Dictionaries", "Python");
             Exercise HashSets = new Exercise("HashSets", "C#");
+            Exercise OverlyExcited = new Exercise("OverlyExcited", "JavaScript");
+            Exercise ChickenMonkey = new Exercise("ChickenMonkey", "JavaScript");
 
             // created 3 cohorts
             Cohort TwentySeven = new Cohort("Day Cohort 27");
@@ -24,6 +27,8 @@ namespace StudentExercises
             Student Jonathan = new Student("Jonathan", "Edwards", "PraiseBe", TwentySeven.Name);
             Student Cashew = new Student("Cashew", "Angoletti", "Cashew", TwentyFive.Name);
             Student Elyse = new Student("Elyse", "Dawson", "ElyseDawson", TwentyEight.Name);
+            Student Alejandro = new Student("Alejandro", "Font", "high-waters", TwentySeven.Name);
+            Student Kayla = new Student("Kayla", "Reid", "k.reid", TwentySeven.Name);
 
             // created 3 instructors
             Instructor Steve = new Instructor("Steve", "Brownlee", "stevebrownlee", TwentySeven.Name);
@@ -33,24 +38,23 @@ namespace StudentExercises
             // assign 2 exercises to 3 students
             Steve.Assign(Madi, Classes);
             Steve.Assign(Madi, HashSets);
+            Steve.Assign(Madi, OverlyExcited);
+            Meg.Assign(Madi, ChickenMonkey);
             Meg.Assign(Jonathan, Classes);
             Meg.Assign(Jonathan, HashSets);
+            Meg.Assign(Jonathan, ChickenMonkey);
             Jenna.Assign(Elyse, Classes);
             Jenna.Assign(Elyse, Lists);
-            
-            List<Student> StudentList = new List<Student>();
-            // added students to the student list that was created
-            StudentList.Add(Madi);
-            StudentList.Add(Jonathan);
-            StudentList.Add(Cashew);
-            StudentList.Add(Elyse);
 
-            List<Exercise> AllExercises = new List<Exercise>();
+            List<Student> StudentList = new List<Student>(){
+            // added students to the student list that was created
+                Madi, Jonathan, Cashew, Elyse
+            };
+
+            List<Exercise> AllExercises = new List<Exercise>(){
             // added exercises to the exercise list that was created
-            AllExercises.Add(Classes);
-            AllExercises.Add(Lists);
-            AllExercises.Add(Dictionaries);
-            AllExercises.Add(HashSets);
+                Classes, Lists, Dictionaries, HashSets
+            };
 
             // loop through the list of students
             foreach(Student student in StudentList)
@@ -67,6 +71,76 @@ namespace StudentExercises
                     }
 
                 }
+            }
+
+            /*
+                ☑️ 1. List exercises for the JavaScript language by using the Where() LINQ method.
+                ☑️ 2. List students in a particular cohort by using the Where() LINQ method.
+                ☑️ 3. List instructors in a particular cohort by using the Where() LINQ method.
+                ☑️ 4. Sort the students by their last name.
+                ☑️ 5. Display any students that aren't working on any exercises (Make sure one of your student          instances don't have any exercises. Create a new student if you need to.)
+                ☑️ 6. Which student is working on the most exercises? Make sure one of your students has more exercises than the others.
+                ☑️ 7. How many students in each cohort?
+            */
+
+            Console.WriteLine("////////// Student Exercise Pt. 2 //////////");
+            List<Student> students = new List<Student>(){
+                Madi, Jonathan, Cashew, Elyse, Kayla, Alejandro
+            };
+            List<Instructor> instructors = new List<Instructor>(){
+                Steve, Jenna, Meg
+            };
+            List<Exercise> exercises = new List<Exercise>(){
+                Classes, Lists, Dictionaries, HashSets, ChickenMonkey, OverlyExcited
+            };
+            List<Cohort> cohorts = new List<Cohort>(){
+                TwentyEight, TwentySeven, TwentyFive
+            };
+
+            Console.WriteLine("///// JavaScript Exercises /////");
+            List<Exercise> JSExercises = (from e in exercises
+                where e.Language.Contains("JavaScript")
+                select e).ToList();
+            JSExercises.ForEach(e => Console.WriteLine(e.Name));
+
+            Console.WriteLine("///// Students in 27 /////");
+            List<Student> TwentySevenStudents = (from s in students
+                where s.Cohort.Contains("27")
+                select s).ToList();
+            TwentySevenStudents.ForEach(s => Console.WriteLine(s.FullName));
+
+            Console.WriteLine("///// Instructors in 27 /////");
+            List<Instructor> TwentySevenInstructors = (from i in instructors
+                where i.CohortName.Contains("27")
+                select i).ToList();
+            TwentySevenInstructors.ForEach(i => Console.WriteLine(i.FirstName));
+
+            Console.WriteLine("///// Sort Students by Last Name /////");
+            List<Student> lastNames = (from s in students
+                orderby s.LastName ascending
+                select s).ToList();
+            lastNames.ForEach(s => Console.WriteLine(s.FullName));
+
+            Console.WriteLine("///// Students w/o Exercise /////");
+            List<Student> noExercises = (from s in students
+                where s.ExerciseList.Count() == 0
+                select s).ToList();
+            noExercises.ForEach(student => Console.WriteLine($"{student.FirstName} does not have an exercise!"));
+
+            Console.WriteLine("///// Most Exercises per Student /////");
+            List<Student> mostExercises = (from s in students
+                orderby s.ExerciseList.Count() descending
+                select s).ToList();
+            Console.WriteLine($"{mostExercises.First().FirstName} has the most exercises.");
+
+            Console.WriteLine("///// How many students per Cohort? /////");
+            var totalStudents = from student in students
+                group student by student.Cohort into sortedStudents
+                select new {Cohort = sortedStudents.Key, Students = sortedStudents.ToList()};
+
+            foreach (var total in totalStudents)
+            {
+                Console.WriteLine($"Cohort {total.Cohort} has {total.Students.Count()} students.");
             }
         }
     }

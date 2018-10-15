@@ -20,7 +20,7 @@ namespace StudentExercises
         public string SlackHandle { get; }
         public string CohortName { get; }
 
-        // created a method that adds (assigns) an exercise to a student
+        // created a method that dds (assigns) an exercise to a student
         public void Assign(Student student, Exercise exercise)
         {
             student.ExerciseList.Add(exercise);

@@ -10,7 +10,7 @@ namespace StudentExercises
             this.Name = Name;
             this.Language = Language;
         }
-
+        
         // the properties of the exercise
         public string Name { get; }
         public string Language { get; }
