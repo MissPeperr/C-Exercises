@@ -103,13 +103,17 @@ namespace linq {
             List<int> wheresSquaredo = new List<int> () {
                 66, 12, 8, 27, 82, 34, 7, 50, 19, 46, 81, 23, 30, 4, 68, 14
             };
-            wheresSquaredo.ForEach(num => 
-            {
-                if(Math.Sqrt(num) % 1 == 0)
-                {
-                    Console.WriteLine(Math.Sqrt(num));
-                }
-            });
+            // wheresSquaredo.ForEach(num => 
+            // {
+            //     if(Math.Sqrt(num) % 1 == 0)
+            //     {
+            //         Console.WriteLine(Math.Sqrt(num));
+            //     }
+            // });
+            List<int> NotSquareNum = wheresSquaredo.TakeWhile(num => Math.Sqrt(num) % 1 != 0).ToList();
+            NotSquareNum.ForEach(num => Console.WriteLine($"Not Perfect Squares: {num}"));
+
+            
 
             /*
                 Given the same customer set, display how many millionaires per bank.
@@ -182,13 +186,15 @@ namespace linq {
             var millionaireReport = (from customer in customers
                 join bank in banks on customer.Bank equals bank.Symbol into bc
                 from bank in bc
-                select new {BankName = bank.Name, CustomerName = customer.Name}).ToList();
-            
-            
+                select new {BankName = bank.Name, FirstName = customer.Name.Split()[0], LastName = customer.Name.Split()[1], FullName = customer.Name}).ToList();            
+         
+            var sortNames = (from c in millionaireReport
+                orderby c.LastName ascending
+                select c).ToList();
 
-            foreach (var reportInfo in millionaireReport)
+            foreach (var info in sortNames)
             {
-                Console.WriteLine($"{reportInfo.CustomerName} at {reportInfo.BankName}");
+                Console.WriteLine($"{info.FullName} at {info.BankName}");
             }
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
+using Microsoft.Data.Sqlite;
 
 namespace StudentExercises
 {
@@ -25,7 +27,7 @@ namespace StudentExercises
             // created 4 students
             Student Madi = new Student("Madi", "Peper", "MadiPeper", TwentySeven.Name);
             Student Jonathan = new Student("Jonathan", "Edwards", "PraiseBe", TwentySeven.Name);
-            Student Cashew = new Student("Cashew", "Angoletti", "Cashew", TwentyFive.Name);
+            Student Cashew = new Student("Cashew", "Agnoletti", "Cashew", TwentyFive.Name);
             Student Elyse = new Student("Elyse", "Dawson", "ElyseDawson", TwentyEight.Name);
             Student Alejandro = new Student("Alejandro", "Font", "high-waters", TwentySeven.Name);
             Student Kayla = new Student("Kayla", "Reid", "k.reid", TwentySeven.Name);
@@ -134,6 +136,7 @@ namespace StudentExercises
             Console.WriteLine($"{mostExercises.First().FirstName} has the most exercises.");
 
             Console.WriteLine("///// How many students per Cohort? /////");
+            // using var here because it is making an anonymous object
             var totalStudents = from student in students
                 group student by student.Cohort into sortedStudents
                 select new {Cohort = sortedStudents.Key, Students = sortedStudents.ToList()};
@@ -142,6 +145,21 @@ namespace StudentExercises
             {
                 Console.WriteLine($"Cohort {total.Cohort} has {total.Students.Count()} students.");
             }
+
+            Console.WriteLine("////////// Students Exercise Pt. 4 //////////");
+            SqliteConnection db = DatabaseInterface.Connection;
+            // DatabaseInterface.CheckCohortTable();
+            // DatabaseInterface.CheckStudentTable();
+            // DatabaseInterface.CheckInstructorTable();
+            // DatabaseInterface.CheckExerciseTable();
+
+            // List<Exercise> DBexercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
+            // exercises.ForEach(exer => Console.WriteLine($"{exer.Name}"));
+            db.Query<Exercise>(@"SELECT * FROM Exercise")
+              .ToList()
+              .ForEach(exer => Console.WriteLine($"{exer.Name}"));
+
         }
     }
 }
+
