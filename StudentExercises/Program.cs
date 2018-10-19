@@ -148,17 +148,45 @@ namespace StudentExercises
 
             Console.WriteLine("////////// Students Exercise Pt. 4 //////////");
             SqliteConnection db = DatabaseInterface.Connection;
-            // DatabaseInterface.CheckCohortTable();
-            // DatabaseInterface.CheckStudentTable();
-            // DatabaseInterface.CheckInstructorTable();
-            // DatabaseInterface.CheckExerciseTable();
 
-            // List<Exercise> DBexercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
-            // exercises.ForEach(exer => Console.WriteLine($"{exer.Name}"));
-            db.Query<Exercise>(@"SELECT * FROM Exercise")
-              .ToList()
-              .ForEach(exer => Console.WriteLine($"{exer.Name}"));
+            List<Exercise> DBexercises = db.Query<Exercise>(@"SELECT * FROM Exercise").ToList();
+            DBexercises.ForEach(exer => Console.WriteLine($"Exercises: {exer.Name}"));
 
+            db.Query<Exercise>(@"
+            SELECT * FROM Exercise 
+            WHERE Language='JavaScript'")
+            .ToList()
+            .ForEach(exer => Console.WriteLine($"Javascript Exercise: {exer.Name}"));
+
+            // CODE HAS ALREADY BEEN EXECUTED
+            // db.Execute($@"
+            // INSERT INTO Exercise ('Name', 'Language') VALUES ('Student Exercises', 'C#')");
+
+            db.Query<Instructor, Cohort, Instructor>(@"
+            SELECT i.Id,
+                   i.FirstName,
+                   i.LastName,
+                   i.SlackHandle,
+                   c.Id,
+                   c.CohortName
+            FROM Instructors i
+            JOIN Cohort c ON c.Id = i.CohortId", 
+            (instructor, cohort) =>
+            {
+                instructor.CohortName = cohort.CohortName;
+                return instructor;
+            })
+            .ToList()
+            .ForEach(ins => Console.WriteLine($"{ins.FirstName} {ins.LastName} is currently an instructor for {ins.CohortName}"));
+
+            // CODE HAS ALREADY BEEN EXECUTED
+            // db.Execute(@"
+            // INSERT INTO Instructors (FirstName, LastName, SlackHandle, CohortId)
+            // VALUES('Jisie', 'David', 'jisie', 2)");
+
+            // CODE HAS ALREADY BEEN EXECUTED
+            // db.Execute(@"
+            // INSERT INTO StudentExercise (StudentId, ExerciseId) VALUES (1, 5)");
         }
     }
 }
